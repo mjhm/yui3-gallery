@@ -4,3 +4,6 @@ build_rollup_tmp*/
 .*.swp
 .svn
 CVS/
+*~
+.dropbox*
+desktop.ini
