@@ -732,4 +732,4 @@ Y.extend(Queue, Y.EventTarget, {
 
 
 
-}, '@VERSION@' ,{requires:['event-custom']});
+}, '@VERSION@' ,{supersedes:['async-queue'], requires:['event-custom']});

@@ -1,92 +1,180 @@
-YUI.add('gallery-async-queue', function(Y) {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>js&#x2F;async-queue.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.5.1&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.5.1&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
 
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/AsyncQueue.html">AsyncQueue</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/async-queue.html">async-queue</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: js&#x2F;async-queue.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
    
-/**
- * <p>AsyncQueue allows you create a chain of function callbacks executed
+&#x2F;**
+ * &lt;p&gt;AsyncQueue allows you create a chain of function callbacks executed
  * via setTimeout (or synchronously) that are guaranteed to run in order.
  * Items in the queue can be promoted or removed.  Start or resume the
  * execution chain with run().  pause() to temporarily delay execution, or
- * stop() to halt and clear the queue.</p>
+ * stop() to halt and clear the queue.&lt;&#x2F;p&gt;
  *
  * @module async-queue
- */
+ *&#x2F;
 
-/**
- * <p>A specialized queue class that supports scheduling callbacks to execute
- * sequentially, iteratively, even asynchronously.</p>
+&#x2F;**
+ * &lt;p&gt;A specialized queue class that supports scheduling callbacks to execute
+ * sequentially, iteratively, even asynchronously.&lt;&#x2F;p&gt;
  *
- * <p>Callbacks can be function refs or objects with the following keys.  Only
- * the <code>fn</code> key is required.</p>
+ * &lt;p&gt;Callbacks can be function refs or objects with the following keys.  Only
+ * the &lt;code&gt;fn&lt;&#x2F;code&gt; key is required.&lt;&#x2F;p&gt;
  *
- * <ul>
- * <li><code>fn</code> -- The callback function</li>
- * <li><code>context</code> -- The execution context for the callbackFn. 
- *                        Specify "callback" to use the callback's 
- *                        configuration object as it's execution context.</li>
- * <li><code>args</code> -- Arguments to pass to callbackFn.</li>
- * <li><code>timeout</code> -- Millisecond delay before executing callbackFn.
- *                     (Applies to each iterative execution of callback)</li>
- * <li><code>iterations</code> -- Number of times to repeat the callback.
- * <li><code>until</code> -- Repeat the callback until this function returns
+ * &lt;ul&gt;
+ * &lt;li&gt;&lt;code&gt;fn&lt;&#x2F;code&gt; -- The callback function&lt;&#x2F;li&gt;
+ * &lt;li&gt;&lt;code&gt;context&lt;&#x2F;code&gt; -- The execution context for the callbackFn. 
+ *                        Specify &quot;callback&quot; to use the callback&#x27;s 
+ *                        configuration object as it&#x27;s execution context.&lt;&#x2F;li&gt;
+ * &lt;li&gt;&lt;code&gt;args&lt;&#x2F;code&gt; -- Arguments to pass to callbackFn.&lt;&#x2F;li&gt;
+ * &lt;li&gt;&lt;code&gt;timeout&lt;&#x2F;code&gt; -- Millisecond delay before executing callbackFn.
+ *                     (Applies to each iterative execution of callback)&lt;&#x2F;li&gt;
+ * &lt;li&gt;&lt;code&gt;iterations&lt;&#x2F;code&gt; -- Number of times to repeat the callback.
+ * &lt;li&gt;&lt;code&gt;until&lt;&#x2F;code&gt; -- Repeat the callback until this function returns
  *                         true.  This setting trumps iterations.  Note that
  *                         the until function is tested before the timeout 
- *                         delay.</li>
- * <li><code>autoContinue</code> -- Set to false to prevent the AsyncQueue from
+ *                         delay.&lt;&#x2F;li&gt;
+ * &lt;li&gt;&lt;code&gt;autoContinue&lt;&#x2F;code&gt; -- Set to false to prevent the AsyncQueue from
  *                        executing the next callback in the Queue after
- *                        the callback completes.</li>
- * <li><code>alwaysPause</code> -- "true" pauses the queue before every 
- *                        callback execution.</li>
- * <li><code>id</code> -- Name that can be used to get, promote, get the
- *                        indexOf, or delete this callback.</li>
- * </ul>
+ *                        the callback completes.&lt;&#x2F;li&gt;
+ * &lt;li&gt;&lt;code&gt;alwaysPause&lt;&#x2F;code&gt; -- &quot;true&quot; pauses the queue before every 
+ *                        callback execution.&lt;&#x2F;li&gt;
+ * &lt;li&gt;&lt;code&gt;id&lt;&#x2F;code&gt; -- Name that can be used to get, promote, get the
+ *                        indexOf, or delete this callback.&lt;&#x2F;li&gt;
+ * &lt;&#x2F;ul&gt;
  *
  * @class AsyncQueue
  * @extends EventTarget
  * @constructor
  * @param callback* {Function|Object} 0..n callbacks to seed the queue
- */
+ *&#x2F;
 Y.AsyncQueue = function() {
     this._init();
     this.add.apply(this, arguments);
 };
 
 var Queue   = Y.AsyncQueue,
-    EXECUTE = 'execute',
-    SHIFT   = 'shift',
-    PROMOTE = 'promote',
-    REMOVE  = 'remove',
-    RESET   = 'reset',
+    EXECUTE = &#x27;execute&#x27;,
+    SHIFT   = &#x27;shift&#x27;,
+    PROMOTE = &#x27;promote&#x27;,
+    REMOVE  = &#x27;remove&#x27;,
+    RESET   = &#x27;reset&#x27;,
 
     isObject   = Y.Lang.isObject,
     isFunction = Y.Lang.isFunction;
 
-/**
- * <p>Static default values used to populate callback configuration properties.
- * Preconfigured defaults include:</p>
+&#x2F;**
+ * &lt;p&gt;Static default values used to populate callback configuration properties.
+ * Preconfigured defaults include:&lt;&#x2F;p&gt;
  *
- * <ul>
- *  <li><code>autoContinue</code>: <code>true</code></li>
- *  <li><code>iterations</code>: 1</li>
- *  <li><code>timeout</code>: 10 (10ms between callbacks)</li>
- *  <li><code>until</code>: (function to run until iterations &lt;= 0)</li>
- * </ul>
+ * &lt;ul&gt;
+ *  &lt;li&gt;&lt;code&gt;autoContinue&lt;&#x2F;code&gt;: &lt;code&gt;true&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+ *  &lt;li&gt;&lt;code&gt;iterations&lt;&#x2F;code&gt;: 1&lt;&#x2F;li&gt;
+ *  &lt;li&gt;&lt;code&gt;timeout&lt;&#x2F;code&gt;: 10 (10ms between callbacks)&lt;&#x2F;li&gt;
+ *  &lt;li&gt;&lt;code&gt;until&lt;&#x2F;code&gt;: (function to run until iterations &amp;lt;= 0)&lt;&#x2F;li&gt;
+ * &lt;&#x2F;ul&gt;
  *
  * @property defaults
  * @type {Object}
  * @static
- */
+ *&#x2F;
 Queue.defaults = Y.mix({
     autoContinue : true,
     iterations   : 1,
     timeout      : 10,
     until        : function () {
         this.iterations |= 0;
-        return this.iterations <= 0;
+        return this.iterations &lt;= 0;
     }
 }, Y.config.queueDefaults || {});
 
 Y.extend(Queue, Y.EventTarget, {
-    /**
+    &#x2F;**
      * Used to indicate the queue is currently executing a callback.
      *
      * @property _running
@@ -94,76 +182,76 @@ Y.extend(Queue, Y.EventTarget, {
      *                        return handle from Y.later for async callbacks.
      *                        Otherwise false.
      * @protected
-     */
+     *&#x2F;
     _running : false,
 
-    /**
+    &#x2F;**
      * Initializes the AsyncQueue instance properties and events.
      *
      * @method _init
      * @protected
-     */
+     *&#x2F;
     _init : function () {
-        Y.EventTarget.call(this, { prefix: 'queue', emitFacade: true });
+        Y.EventTarget.call(this, { prefix: &#x27;queue&#x27;, emitFacade: true });
 
         this._q = [];
         
-        // Holds a clone of the _q from the first execution
-        // of run, so that rhe queue can reset to its initial state.
+        &#x2F;&#x2F; Holds a clone of the _q from the first execution
+        &#x2F;&#x2F; of run, so that rhe queue can reset to its initial state.
         this._qReset = null;
         
-        // List of return values from callbacks.  Used to execute 
-        // .cancel or .detach methods.
+        &#x2F;&#x2F; List of return values from callbacks.  Used to execute 
+        &#x2F;&#x2F; .cancel or .detach methods.
         this._handles = [];
         
-        // Force the queue's context onto "run" so that it can
-        // be passed to callbacks as a fixed context function.
-        // (Is there a more elegant way to accomplish this?)
+        &#x2F;&#x2F; Force the queue&#x27;s context onto &quot;run&quot; so that it can
+        &#x2F;&#x2F; be passed to callbacks as a fixed context function.
+        &#x2F;&#x2F; (Is there a more elegant way to accomplish this?)
         this.run = Y.bind(this.run, this);
 
-        /** 
+        &#x2F;** 
          * Callback defaults for this instance.  Static defaults that are not
          * overridden are also included.
          *
          * @property defaults
          * @type {Object}
-         */
+         *&#x2F;
         this.defaults = {};
 
         this._initEvents();
     },
 
-    /**
+    &#x2F;**
      * Initializes the instance events.
      *
      * @method _initEvents
      * @protected
-     */
+     *&#x2F;
     _initEvents : function () {
         this.publish({
-            'execute' : { defaultFn : this._defExecFn,    emitFacade: true },
-            'shift'   : { defaultFn : this._defShiftFn,   emitFacade: true },
-            'add'     : { defaultFn : this._defAddFn,     emitFacade: true },
-            'promote' : { defaultFn : this._defPromoteFn, emitFacade: true },
-            'remove'  : { defaultFn : this._defRemoveFn,  emitFacade: true },
-            'reset'   : { defaultFn : this._defResetFn,   emitFacade: true }
+            &#x27;execute&#x27; : { defaultFn : this._defExecFn,    emitFacade: true },
+            &#x27;shift&#x27;   : { defaultFn : this._defShiftFn,   emitFacade: true },
+            &#x27;add&#x27;     : { defaultFn : this._defAddFn,     emitFacade: true },
+            &#x27;promote&#x27; : { defaultFn : this._defPromoteFn, emitFacade: true },
+            &#x27;remove&#x27;  : { defaultFn : this._defRemoveFn,  emitFacade: true },
+            &#x27;reset&#x27;   : { defaultFn : this._defResetFn,   emitFacade: true }
         });
     },
     
-    /**
+    &#x2F;**
      * Modifies the queue.defaults configuration as a chainable method.
      * 
      * @method config
      * @param config {Object} See above for appropriate keys.
      * @return {AsyncQueue} the AsyncQueue instance
      * @chainable
-     */
+     *&#x2F;
     config: function (config) {
         this.defaults = Y.merge(this.defaults, config);
         return this;
     },
 
-    /**
+    &#x2F;**
      * Returns the next callback needing execution.  If a callback is
      * configured to repeat via iterations or until, it will be returned until
      * the completion criteria is met.
@@ -173,15 +261,15 @@ Y.extend(Queue, Y.EventTarget, {
      * @method next
      * @param args {Array} (optional) arguments to execute on callback.
      *    typically passed from from .run.  Note that the arguments are bound
-     *    when .next is called.  So for example the arguments can't be changed
+     *    when .next is called.  So for example the arguments can&#x27;t be changed
      *    from one callback iteration to the next.
      * @return {Function} the callback to execute
-     */
+     *&#x2F;
     next : function () {
         var callback;
         while (this._q.length) {
             callback = this._q[0] = this._prepare(this._q[0]);
-            if (callback && callback.until()) {
+            if (callback &amp;&amp; callback.until()) {
                 this.fire(SHIFT, { callback: callback });
                 callback = null;
             } else {
@@ -192,22 +280,22 @@ Y.extend(Queue, Y.EventTarget, {
         return callback || null;
     },
 
-    /**
-     * Default functionality for the &quot;shift&quot; event.  Shifts the
-     * callback stored in the event object's <em>callback</em> property from
+    &#x2F;**
+     * Default functionality for the &amp;quot;shift&amp;quot; event.  Shifts the
+     * callback stored in the event object&#x27;s &lt;em&gt;callback&lt;&#x2F;em&gt; property from
      * the queue if it is the first item.
      *
      * @method _defShiftFn
      * @param e {Event} The event object
      * @protected
-     */
+     *&#x2F;
     _defShiftFn : function (e) {
         if (this.indexOf(e.callback) === 0) {
             this._q.shift();
         }
     },
 
-    /**
+    &#x2F;**
      * Creates a wrapper function to execute the callback using the aggregated 
      * configuration generated by combining the static AsyncQueue.defaults, the
      * instance defaults, and the specified callback settings.
@@ -219,10 +307,10 @@ Y.extend(Queue, Y.EventTarget, {
      * @param callback {Object|Function} the raw callback
      * @return {Function} a decorated function wrapper to execute the callback
      * @protected
-     */
+     *&#x2F;
     _prepare: function (callback) {
         
-        if (isFunction(callback) && callback._prepared) {
+        if (isFunction(callback) &amp;&amp; callback._prepared) {
             return callback;
         }
 
@@ -236,7 +324,7 @@ Y.extend(Queue, Y.EventTarget, {
                 if (!wrapper._running) {
                     wrapper.iterations--;
                 }
-                if (wrapper.context === 'callback') {
+                if (wrapper.context === &#x27;callback&#x27;) {
                     wrapper.context = wrapper;
                 }
                 if (wrapper.alwaysPause) {
@@ -251,18 +339,18 @@ Y.extend(Queue, Y.EventTarget, {
         return Y.mix(wrapper, config);
     },
         
-    /**
-     * Breaks out of a queue callback's iteration loop.
+    &#x2F;**
+     * Breaks out of a queue callback&#x27;s iteration loop.
      *
      * @method callbackBreak
      * @return {AsyncQueue} the AsyncQueue instance
      * @chainable
-     */
+     *&#x2F;
     
     callbackBreak : function (timeout) {
         if (this._q.length) { 
             if (! this._q[0]._running) {
-                // Pausee first when called from outside a queue callback.
+                &#x2F;&#x2F; Pausee first when called from outside a queue callback.
                 this.pause();
             }
             this._q[0].until = function () {return true;};
@@ -270,26 +358,26 @@ Y.extend(Queue, Y.EventTarget, {
         return this.run();
     },
 
-    /**
+    &#x2F;**
      * Stops the queue, and resets it to the state before the first .run().
      * @method reset
      * @param andRun {Boolean} if true the queue will be restarted after reset.
      * @return {AsyncQueue} the AsyncQueue instance
      * @chainable
-     */
+     *&#x2F;
     reset: function (andRun) {
         this.fire(RESET, {andRun: andRun});
         return this;
     },
     
-    /**
-     * Default functionality for the &quot;reset&quot; event. Resets the
-     * queue to the state of it's first .run.
+    &#x2F;**
+     * Default functionality for the &amp;quot;reset&amp;quot; event. Resets the
+     * queue to the state of it&#x27;s first .run.
      *
      * @method _defResetFn
      * @param e {Event} the event object
      * @protected
-     */
+     *&#x2F;
     
     _defResetFn: function (e) {
         if (this._qReset) {
@@ -301,15 +389,15 @@ Y.extend(Queue, Y.EventTarget, {
         }
     },
     
-    /**
+    &#x2F;**
      * Runs either .cancel methods on the return values (or .detach methods
      * for EventHandles.) of prior callback executions.  This is called by .run 
-     * to clean up event handlers or Y.later's from those callbacks.
+     * to clean up event handlers or Y.later&#x27;s from those callbacks.
      *
      * @method clearHandles
      * @return {AsyncQueue} the AsyncQueue instance
      * @chainable
-     */
+     *&#x2F;
     clearHandles: function () {
         var q = this;
         if (q._handles) {
@@ -327,7 +415,7 @@ Y.extend(Queue, Y.EventTarget, {
         return q;
     },
     
-    /**
+    &#x2F;**
      * Sets the queue in motion.  All queued callbacks will be executed in
      * order unless pause() or stop() is called or if one of the callbacks is
      * configured with autoContinue: false.
@@ -336,7 +424,7 @@ Y.extend(Queue, Y.EventTarget, {
      * @param args* arbitrary arguments to pass to the next callback.
      * @return {AsyncQueue} the AsyncQueue instance
      * @chainable
-     */
+     *&#x2F;
     
     run : function () {
         if (! this._qReset) {
@@ -346,35 +434,35 @@ Y.extend(Queue, Y.EventTarget, {
         return this._run(Array.prototype.slice.call(arguments));
     },
     
-    /**
+    &#x2F;**
      * Internal representation of run.
      *
      * @method _run
      * @param args {Array} arguments object passed from run.
      * @return {Boolean} whether the run loop should continue
      * @protected
-     */
+     *&#x2F;
 
     _run: function (args) {
         var callback,
             cont = true;
         
                 
-        if (this._q.length && this._q[0]._running) {
-            // This handles the corner case when .run is called from within
-            // an asynchronous callback.  It prevents the next callback from
-            // executing twice.
-            // This check needs to happen before running .next, 
-            // because q[0] will be shifted off the queue, and 
-            // this._q[0]._running will be undefined.
+        if (this._q.length &amp;&amp; this._q[0]._running) {
+            &#x2F;&#x2F; This handles the corner case when .run is called from within
+            &#x2F;&#x2F; an asynchronous callback.  It prevents the next callback from
+            &#x2F;&#x2F; executing twice.
+            &#x2F;&#x2F; This check needs to happen before running .next, 
+            &#x2F;&#x2F; because q[0] will be shifted off the queue, and 
+            &#x2F;&#x2F; this._q[0]._running will be undefined.
             
             this._running = true;
             
-            // It's reasonably safe to do the .next here because we're exiting.
-            // However a subsequent call to .run within the same callback with
-            // arguments will possibly generate an extra callback.  But that 
-            // would be a very, very unusual case.
-            if (args && args.length) {
+            &#x2F;&#x2F; It&#x27;s reasonably safe to do the .next here because we&#x27;re exiting.
+            &#x2F;&#x2F; However a subsequent call to .run within the same callback with
+            &#x2F;&#x2F; arguments will possibly generate an extra callback.  But that 
+            &#x2F;&#x2F; would be a very, very unusual case.
+            if (args &amp;&amp; args.length) {
                 callback = this.next();
                 if (callback) {
                     callback.args = args;
@@ -384,34 +472,34 @@ Y.extend(Queue, Y.EventTarget, {
         }
         
         callback = this.next();
-        if (args && args.length && callback) {
+        if (args &amp;&amp; args.length &amp;&amp; callback) {
                 callback.args = args;
         }
-        // Note that args are only applied to first .next result -- not the
-        // subsequent .next calls in the loop below.                        
+        &#x2F;&#x2F; Note that args are only applied to first .next result -- not the
+        &#x2F;&#x2F; subsequent .next calls in the loop below.                        
         
         for (;
-            cont && callback && !this.isRunning();
+            cont &amp;&amp; callback &amp;&amp; !this.isRunning();
             callback = this.next())
         {
-            cont = (callback.timeout < 0) ?
+            cont = (callback.timeout &lt; 0) ?
                 this._execute(callback, true) :
                 this._schedule(callback);
         }
 
         if (!callback) {
-            /**
+            &#x2F;**
              * Event fired after the last queued callback is executed.
              * @event complete
-             */
+             *&#x2F;
             this.clearHandles();
-            this.fire('complete');
+            this.fire(&#x27;complete&#x27;);
         }
 
         return this;
     },
 
-    /**
+    &#x2F;**
      * Handles the execution of callbacks. Returns a boolean indicating
      * whether it is appropriate to continue running.
      *
@@ -419,7 +507,7 @@ Y.extend(Queue, Y.EventTarget, {
      * @param callback {Object} the callback object to execute
      * @return {Boolean} whether the run loop should continue
      * @protected
-     */
+     *&#x2F;
      
     _execute : function (callback, isSynchronous) {
         callback._running = true;
@@ -428,16 +516,16 @@ Y.extend(Queue, Y.EventTarget, {
         callback.iterations--;
         this.fire(EXECUTE, { callback: callback });
 
-        var cont = this._running && callback.autoContinue;
+        var cont = this._running &amp;&amp; callback.autoContinue;
 
         callback._running = false;
-        if (isObject(this._running) && isSynchronous) {
-            // Do nothing.
-            // This corner case occurs when a synchronous callback task is 
-            // followed by an asynchronous task. So "this._running" will be the 
-            // Y.later object from the asynchronous task and will ultimately be 
-            // cleared by that task.  Setting it to false in this case would 
-            // allow "run" pick up an extra execution of the asynchronous task.
+        if (isObject(this._running) &amp;&amp; isSynchronous) {
+            &#x2F;&#x2F; Do nothing.
+            &#x2F;&#x2F; This corner case occurs when a synchronous callback task is 
+            &#x2F;&#x2F; followed by an asynchronous task. So &quot;this._running&quot; will be the 
+            &#x2F;&#x2F; Y.later object from the asynchronous task and will ultimately be 
+            &#x2F;&#x2F; cleared by that task.  Setting it to false in this case would 
+            &#x2F;&#x2F; allow &quot;run&quot; pick up an extra execution of the asynchronous task.
         } else {
             this._running = false;
         }
@@ -445,14 +533,14 @@ Y.extend(Queue, Y.EventTarget, {
         return cont;
     },
 
-    /**
+    &#x2F;**
      * Schedules the execution of asynchronous callbacks.
      *
      * @method _schedule
      * @param callback {Object} the callback object to execute
      * @return {Boolean} whether the run loop should continue
      * @protected
-     */
+     *&#x2F;
     _schedule : function (callback) {
         this._running = Y.later(callback.timeout, this, function () {
             if (this._execute(callback)) {
@@ -463,35 +551,35 @@ Y.extend(Queue, Y.EventTarget, {
         return false;
     },
 
-    /**
+    &#x2F;**
      * Determines if the queue is waiting for a callback to complete execution.
      *
      * @method isRunning
      * @return {Boolean} true if queue is waiting for a 
      *                   from any initiated transactions
-     */
+     *&#x2F;
     isRunning : function () {
         return !!this._running;
     },
 
-    /**
-     * Default functionality for the &quot;execute&quot; event.  Executes the
+    &#x2F;**
+     * Default functionality for the &amp;quot;execute&amp;quot; event.  Executes the
      * callback function
      *
      * @method _defExecFn
      * @param e {Event} the event object
      * @protected
-     */
+     *&#x2F;
     _defExecFn : function (e) {
         var handle = e.callback();
-        if (handle && handle !== this) { 
-            // Skip the case where callback returns the queue instance itself.
-            // (e.g. .pause())
+        if (handle &amp;&amp; handle !== this) { 
+            &#x2F;&#x2F; Skip the case where callback returns the queue instance itself.
+            &#x2F;&#x2F; (e.g. .pause())
             this._handles.push(handle);
         }
     },
 
-    /**
+    &#x2F;**
      * Add any number of callbacks to the end of the queue. Callbacks may be
      * provided as functions or objects.
      *
@@ -499,23 +587,23 @@ Y.extend(Queue, Y.EventTarget, {
      * @param callback* {Function|Object} 0..n callbacks
      * @return {AsyncQueue} the AsyncQueue instance
      * @chainable
-     */
+     *&#x2F;
     add : function () {
-        this.fire('add', { callbacks: Y.Array(arguments,0,true) });
+        this.fire(&#x27;add&#x27;, { callbacks: Y.Array(arguments,0,true) });
 
         return this;
     },
 
-    /**
-     * Default functionality for the &quot;add&quot; event.  Adds the callbacks
+    &#x2F;**
+     * Default functionality for the &amp;quot;add&amp;quot; event.  Adds the callbacks
      * in the event facade to the queue. Callbacks successfully added to the
-     * queue are present in the event's <code>added</code> property in the
+     * queue are present in the event&#x27;s &lt;code&gt;added&lt;&#x2F;code&gt; property in the
      * after phase.
      *
      * @method _defAddFn
      * @param e {Event} the event object
      * @protected
-     */
+     *&#x2F;
     _defAddFn : function(e) {
         var _q = this._q,
             added = [];
@@ -530,7 +618,7 @@ Y.extend(Queue, Y.EventTarget, {
         e.added = added;
     },
     
-   /**
+   &#x2F;**
      * Add any number of callbacks to the front of the queue. Callbacks may be
      * provided as functions or objects.  This is essentially a wrapper for 
      * .add followed by .promote for each callback.
@@ -539,7 +627,7 @@ Y.extend(Queue, Y.EventTarget, {
      * @param callback* {Function|Object} 0..n callbacks
      * @return {AsyncQueue} the AsyncQueue instance
      * @chainable
-     */
+     *&#x2F;
 
     addFront: function () {
         var q = this;
@@ -552,7 +640,7 @@ Y.extend(Queue, Y.EventTarget, {
         return q;
     },
 
-    /**
+    &#x2F;**
      * Pause the execution of the queue after the execution of the current
      * callback completes.  If called from code outside of a queued callback,
      * clears the timeout for the pending callback. Paused queue can be
@@ -561,7 +649,7 @@ Y.extend(Queue, Y.EventTarget, {
      * @method pause
      * @return {AsyncQueue} the AsyncQueue instance
      * @chainable
-     */
+     *&#x2F;
     pause: function () {
         if (isObject(this._running)) {
             this._running.cancel();
@@ -572,32 +660,32 @@ Y.extend(Queue, Y.EventTarget, {
         return this;
     },
 
-    /**
+    &#x2F;**
      * Stop and clear the queue after the current execution of the
      * current callback completes.
      *
      * @method stop
      * @return {AsyncQueue} the AsyncQueue instance
      * @chainable
-     */
+     *&#x2F;
     stop : function () { 
         this._q = [];
         this.clearHandles();
         return this.pause();
     },
 
-    /** 
+    &#x2F;** 
      * Returns the current index of a callback.  Pass in either the id or
      * callback function from getCallback.
      *
      * @method indexOf
      * @param callback {String|Function} the callback or its specified id
      * @return {Number} index of the callback or -1 if not found
-     */
+     *&#x2F;
     indexOf : function (callback) {
         var i = 0, len = this._q.length, c;
 
-        for (; i < len; ++i) {
+        for (; i &lt; len; ++i) {
             c = this._q[i];
             if (c === callback || c.id === callback) {
                 return i;
@@ -607,30 +695,30 @@ Y.extend(Queue, Y.EventTarget, {
         return -1;
     },
 
-    /**
+    &#x2F;**
      * Retrieve a callback by its id.  Useful to modify the configuration
      * while the queue is running.
      *
      * @method getCallback
      * @param id {String} the id assigned to the callback
      * @return {Object} the callback object
-     */
+     *&#x2F;
     getCallback : function (id) {
         var i = this.indexOf(id);
 
-        return (i > -1) ? this._q[i] : null;
+        return (i &gt; -1) ? this._q[i] : null;
     },
 
-    /**
+    &#x2F;**
      * Promotes the named callback to the top of the queue. If a callback is
      * currently executing or looping (via until or iterations), the promotion
      * is scheduled to occur after the current callback has completed.
      *
      * @method promote
-     * @param callback {String|Object} the callback object or a callback's id
+     * @param callback {String|Object} the callback object or a callback&#x27;s id
      * @return {AsyncQueue} the AsyncQueue instance
      * @chainable
-     */
+     *&#x2F;
     promote : function (callback) {
         var payload = { callback : callback },e;
 
@@ -646,20 +734,20 @@ Y.extend(Queue, Y.EventTarget, {
         return this;
     },
 
-    /**
-     * <p>Default functionality for the &quot;promote&quot; event.  Promotes the
-     * named callback to the head of the queue.</p>
+    &#x2F;**
+     * &lt;p&gt;Default functionality for the &amp;quot;promote&amp;quot; event.  Promotes the
+     * named callback to the head of the queue.&lt;&#x2F;p&gt;
      *
-     * <p>The event object will contain a property &quot;callback&quot;, which
-     * holds the id of a callback or the callback object itself.</p>
+     * &lt;p&gt;The event object will contain a property &amp;quot;callback&amp;quot;, which
+     * holds the id of a callback or the callback object itself.&lt;&#x2F;p&gt;
      *
      * @method _defPromoteFn
      * @param e {Event} the custom event
      * @protected
-     */
+     *&#x2F;
     _defPromoteFn : function (e) {
         var i = this.indexOf(e.callback),
-            promoted = (i > -1) ? this._q.splice(i,1)[0] : null;
+            promoted = (i &gt; -1) ? this._q.splice(i,1)[0] : null;
 
         e.promoted = promoted;
 
@@ -668,20 +756,20 @@ Y.extend(Queue, Y.EventTarget, {
         }
     },
     
-    /**
+    &#x2F;**
      * Removes the callback from the queue.  If the queue is active, the
      * removal is scheduled to occur after the current callback has completed.
      *
      * @method remove
-     * @param callback {String|Object} the callback object or a callback's id
+     * @param callback {String|Object} the callback object or a callback&#x27;s id
      * @return {AsyncQueue} the AsyncQueue instance
      * @chainable
-     */
+     *&#x2F;
     remove : function (callback) {
         var payload = { callback : callback },e;
 
-        // Can't return the removed callback because of the deferral until
-        // current callback is complete
+        &#x2F;&#x2F; Can&#x27;t return the removed callback because of the deferral until
+        &#x2F;&#x2F; current callback is complete
         if (this.isRunning()) {
             e = this.after(SHIFT, function () {
                     this.fire(REMOVE, payload);
@@ -694,32 +782,32 @@ Y.extend(Queue, Y.EventTarget, {
         return this;
     },
 
-    /**
-     * <p>Default functionality for the &quot;remove&quot; event.  Removes the
-     * callback from the queue.</p>
+    &#x2F;**
+     * &lt;p&gt;Default functionality for the &amp;quot;remove&amp;quot; event.  Removes the
+     * callback from the queue.&lt;&#x2F;p&gt;
      *
-     * <p>The event object will contain a property &quot;callback&quot;, which
-     * holds the id of a callback or the callback object itself.</p>
+     * &lt;p&gt;The event object will contain a property &amp;quot;callback&amp;quot;, which
+     * holds the id of a callback or the callback object itself.&lt;&#x2F;p&gt;
      *
      * @method _defRemoveFn
      * @param e {Event} the custom event
      * @protected
-     */
+     *&#x2F;
     _defRemoveFn : function (e) {
         var i = this.indexOf(e.callback);
 
-        e.removed = (i > -1) ? this._q.splice(i,1)[0] : null;
+        e.removed = (i &gt; -1) ? this._q.splice(i,1)[0] : null;
     },
 
-    /**
+    &#x2F;**
      * Returns the number of callbacks in the queue.
      *
      * @method size
      * @return {Number}
-     */
+     *&#x2F;
     size : function () {
-        // next() flushes callbacks that have met their until() criteria and
-        // therefore shouldn't count since they wouldn't execute anyway.
+        &#x2F;&#x2F; next() flushes callbacks that have met their until() criteria and
+        &#x2F;&#x2F; therefore shouldn&#x27;t count since they wouldn&#x27;t execute anyway.
         if (!this.isRunning()) {
             this.next();
         }
@@ -731,5 +819,22 @@ Y.extend(Queue, Y.EventTarget, {
 
 
 
+    </pre>
+</div>
 
-}, '@VERSION@' ,{supersedes:['async-queue'], requires:['event-custom']});
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

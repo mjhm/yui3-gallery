@@ -1,0 +1,610 @@
+{
+    "project": {},
+    "files": {
+        "js/async-queue.js": {
+            "name": "js/async-queue.js",
+            "modules": {
+                "async-queue": 1
+            },
+            "classes": {
+                "AsyncQueue": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "async-queue": {
+            "name": "async-queue",
+            "submodules": {},
+            "classes": {
+                "AsyncQueue": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "js/async-queue.js",
+            "line": 12,
+            "description": "<p>AsyncQueue allows you create a chain of function callbacks executed\nvia setTimeout (or synchronously) that are guaranteed to run in order.\nItems in the queue can be promoted or removed.  Start or resume the\nexecution chain with run().  pause() to temporarily delay execution, or\nstop() to halt and clear the queue.</p>"
+        }
+    },
+    "classes": {
+        "AsyncQueue": {
+            "name": "AsyncQueue",
+            "shortname": "AsyncQueue",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "async-queue",
+            "namespace": "",
+            "file": "js/async-queue.js",
+            "line": 12,
+            "description": "<p>A specialized queue class that supports scheduling callbacks to execute\nsequentially, iteratively, even asynchronously.</p>\n\n<p>Callbacks can be function refs or objects with the following keys.  Only\nthe <code>fn</code> key is required.</p>\n\n<ul>\n<li><code>fn</code> -- The callback function</li>\n<li><code>context</code> -- The execution context for the callbackFn. \n                       Specify \"callback\" to use the callback's \n                       configuration object as it's execution context.</li>\n<li><code>args</code> -- Arguments to pass to callbackFn.</li>\n<li><code>timeout</code> -- Millisecond delay before executing callbackFn.\n                    (Applies to each iterative execution of callback)</li>\n<li><code>iterations</code> -- Number of times to repeat the callback.\n<li><code>until</code> -- Repeat the callback until this function returns\n                        true.  This setting trumps iterations.  Note that\n                        the until function is tested before the timeout \n                        delay.</li>\n<li><code>autoContinue</code> -- Set to false to prevent the AsyncQueue from\n                       executing the next callback in the Queue after\n                       the callback completes.</li>\n<li><code>alwaysPause</code> -- \"true\" pauses the queue before every \n                       callback execution.</li>\n<li><code>id</code> -- Name that can be used to get, promote, get the\n                       indexOf, or delete this callback.</li>\n</ul>",
+            "extends": "EventTarget",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "0..n callbacks to seed the queue",
+                    "type": "Function|Object",
+                    "multiple": true
+                }
+            ]
+        }
+    },
+    "classitems": [
+        {
+            "file": "js/async-queue.js",
+            "line": 61,
+            "description": "<p>Static default values used to populate callback configuration properties.\nPreconfigured defaults include:</p>\n\n<ul>\n <li><code>autoContinue</code>: <code>true</code></li>\n <li><code>iterations</code>: 1</li>\n <li><code>timeout</code>: 10 (10ms between callbacks)</li>\n <li><code>until</code>: (function to run until iterations &lt;= 0)</li>\n</ul>",
+            "itemtype": "property",
+            "name": "defaults",
+            "type": "{Object}",
+            "static": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 87,
+            "description": "Used to indicate the queue is currently executing a callback.",
+            "itemtype": "property",
+            "name": "_running",
+            "type": "{Boolean|Object} true for synchronous callback execution, the\n                       return handle from Y.later for async callbacks.\n                       Otherwise false.",
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 98,
+            "description": "Initializes the AsyncQueue instance properties and events.",
+            "itemtype": "method",
+            "name": "_init",
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 122,
+            "description": "Callback defaults for this instance.  Static defaults that are not\noverridden are also included.",
+            "itemtype": "property",
+            "name": "defaults",
+            "type": "{Object}",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 134,
+            "description": "Initializes the instance events.",
+            "itemtype": "method",
+            "name": "_initEvents",
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 151,
+            "description": "Modifies the queue.defaults configuration as a chainable method.",
+            "itemtype": "method",
+            "name": "config",
+            "params": [
+                {
+                    "name": "config",
+                    "description": "See above for appropriate keys.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "the AsyncQueue instance",
+                "type": "AsyncQueue"
+            },
+            "chainable": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 164,
+            "description": "Returns the next callback needing execution.  If a callback is\nconfigured to repeat via iterations or until, it will be returned until\nthe completion criteria is met.\n\nWhen the queue is empty, null is returned.",
+            "itemtype": "method",
+            "name": "next",
+            "params": [
+                {
+                    "name": "args",
+                    "description": "(optional) arguments to execute on callback.\n   typically passed from from .run.  Note that the arguments are bound\n   when .next is called.  So for example the arguments can't be changed\n   from one callback iteration to the next.",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "the callback to execute",
+                "type": "Function"
+            },
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 193,
+            "description": "Default functionality for the &quot;shift&quot; event.  Shifts the\ncallback stored in the event object's <em>callback</em> property from\nthe queue if it is the first item.",
+            "itemtype": "method",
+            "name": "_defShiftFn",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "The event object",
+                    "type": "Event"
+                }
+            ],
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 208,
+            "description": "Creates a wrapper function to execute the callback using the aggregated \nconfiguration generated by combining the static AsyncQueue.defaults, the\ninstance defaults, and the specified callback settings.\n\nThe wrapper function is decorated with the callback configuration as\nproperties for runtime modification.",
+            "itemtype": "method",
+            "name": "_prepare",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "the raw callback",
+                    "type": "Object|Function"
+                }
+            ],
+            "return": {
+                "description": "a decorated function wrapper to execute the callback",
+                "type": "Function"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 252,
+            "description": "Breaks out of a queue callback's iteration loop.",
+            "itemtype": "method",
+            "name": "callbackBreak",
+            "return": {
+                "description": "the AsyncQueue instance",
+                "type": "AsyncQueue"
+            },
+            "chainable": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 271,
+            "description": "Stops the queue, and resets it to the state before the first .run().",
+            "itemtype": "method",
+            "name": "reset",
+            "params": [
+                {
+                    "name": "andRun",
+                    "description": "if true the queue will be restarted after reset.",
+                    "type": "Boolean"
+                }
+            ],
+            "return": {
+                "description": "the AsyncQueue instance",
+                "type": "AsyncQueue"
+            },
+            "chainable": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 283,
+            "description": "Default functionality for the &quot;reset&quot; event. Resets the\nqueue to the state of it's first .run.",
+            "itemtype": "method",
+            "name": "_defResetFn",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "the event object",
+                    "type": "Event"
+                }
+            ],
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 302,
+            "description": "Runs either .cancel methods on the return values (or .detach methods\nfor EventHandles.) of prior callback executions.  This is called by .run \nto clean up event handlers or Y.later's from those callbacks.",
+            "itemtype": "method",
+            "name": "clearHandles",
+            "return": {
+                "description": "the AsyncQueue instance",
+                "type": "AsyncQueue"
+            },
+            "chainable": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 328,
+            "description": "Sets the queue in motion.  All queued callbacks will be executed in\norder unless pause() or stop() is called or if one of the callbacks is\nconfigured with autoContinue: false.",
+            "itemtype": "method",
+            "name": "run",
+            "params": [
+                {
+                    "name": "args",
+                    "description": "arbitrary arguments to pass to the next callback.",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "the AsyncQueue instance",
+                "type": "AsyncQueue"
+            },
+            "chainable": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 347,
+            "description": "Internal representation of run.",
+            "itemtype": "method",
+            "name": "_run",
+            "params": [
+                {
+                    "name": "args",
+                    "description": "arguments object passed from run.",
+                    "type": "Array"
+                }
+            ],
+            "return": {
+                "description": "whether the run loop should continue",
+                "type": "Boolean"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 401,
+            "description": "Event fired after the last queued callback is executed.",
+            "itemtype": "event",
+            "name": "complete",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 412,
+            "description": "Handles the execution of callbacks. Returns a boolean indicating\nwhether it is appropriate to continue running.",
+            "itemtype": "method",
+            "name": "_execute",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "the callback object to execute",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "whether the run loop should continue",
+                "type": "Boolean"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 446,
+            "description": "Schedules the execution of asynchronous callbacks.",
+            "itemtype": "method",
+            "name": "_schedule",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "the callback object to execute",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "whether the run loop should continue",
+                "type": "Boolean"
+            },
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 464,
+            "description": "Determines if the queue is waiting for a callback to complete execution.",
+            "itemtype": "method",
+            "name": "isRunning",
+            "return": {
+                "description": "true if queue is waiting for a \n                  from any initiated transactions",
+                "type": "Boolean"
+            },
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 475,
+            "description": "Default functionality for the &quot;execute&quot; event.  Executes the\ncallback function",
+            "itemtype": "method",
+            "name": "_defExecFn",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "the event object",
+                    "type": "Event"
+                }
+            ],
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 492,
+            "description": "Add any number of callbacks to the end of the queue. Callbacks may be\nprovided as functions or objects.",
+            "itemtype": "method",
+            "name": "add",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "0..n callbacks",
+                    "type": "Function|Object",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "the AsyncQueue instance",
+                "type": "AsyncQueue"
+            },
+            "chainable": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 507,
+            "description": "Default functionality for the &quot;add&quot; event.  Adds the callbacks\nin the event facade to the queue. Callbacks successfully added to the\nqueue are present in the event's <code>added</code> property in the\nafter phase.",
+            "itemtype": "method",
+            "name": "_defAddFn",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "the event object",
+                    "type": "Event"
+                }
+            ],
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 531,
+            "description": "Add any number of callbacks to the front of the queue. Callbacks may be\nprovided as functions or objects.  This is essentially a wrapper for \n.add followed by .promote for each callback.",
+            "itemtype": "method",
+            "name": "addFront",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "0..n callbacks",
+                    "type": "Function|Object",
+                    "multiple": true
+                }
+            ],
+            "return": {
+                "description": "the AsyncQueue instance",
+                "type": "AsyncQueue"
+            },
+            "chainable": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 553,
+            "description": "Pause the execution of the queue after the execution of the current\ncallback completes.  If called from code outside of a queued callback,\nclears the timeout for the pending callback. Paused queue can be\nrestarted with q.run()",
+            "itemtype": "method",
+            "name": "pause",
+            "return": {
+                "description": "the AsyncQueue instance",
+                "type": "AsyncQueue"
+            },
+            "chainable": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 573,
+            "description": "Stop and clear the queue after the current execution of the\ncurrent callback completes.",
+            "itemtype": "method",
+            "name": "stop",
+            "return": {
+                "description": "the AsyncQueue instance",
+                "type": "AsyncQueue"
+            },
+            "chainable": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 587,
+            "description": "Returns the current index of a callback.  Pass in either the id or\ncallback function from getCallback.",
+            "itemtype": "method",
+            "name": "indexOf",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "the callback or its specified id",
+                    "type": "String|Function"
+                }
+            ],
+            "return": {
+                "description": "index of the callback or -1 if not found",
+                "type": "Number"
+            },
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 608,
+            "description": "Retrieve a callback by its id.  Useful to modify the configuration\nwhile the queue is running.",
+            "itemtype": "method",
+            "name": "getCallback",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "the id assigned to the callback",
+                    "type": "String"
+                }
+            ],
+            "return": {
+                "description": "the callback object",
+                "type": "Object"
+            },
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 622,
+            "description": "Promotes the named callback to the top of the queue. If a callback is\ncurrently executing or looping (via until or iterations), the promotion\nis scheduled to occur after the current callback has completed.",
+            "itemtype": "method",
+            "name": "promote",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "the callback object or a callback's id",
+                    "type": "String|Object"
+                }
+            ],
+            "return": {
+                "description": "the AsyncQueue instance",
+                "type": "AsyncQueue"
+            },
+            "chainable": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 647,
+            "description": "<p>Default functionality for the &quot;promote&quot; event.  Promotes the\nnamed callback to the head of the queue.</p>\n\n<p>The event object will contain a property &quot;callback&quot;, which\nholds the id of a callback or the callback object itself.</p>",
+            "itemtype": "method",
+            "name": "_defPromoteFn",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "the custom event",
+                    "type": "Event"
+                }
+            ],
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 669,
+            "description": "Removes the callback from the queue.  If the queue is active, the\nremoval is scheduled to occur after the current callback has completed.",
+            "itemtype": "method",
+            "name": "remove",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "the callback object or a callback's id",
+                    "type": "String|Object"
+                }
+            ],
+            "return": {
+                "description": "the AsyncQueue instance",
+                "type": "AsyncQueue"
+            },
+            "chainable": 1,
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 695,
+            "description": "<p>Default functionality for the &quot;remove&quot; event.  Removes the\ncallback from the queue.</p>\n\n<p>The event object will contain a property &quot;callback&quot;, which\nholds the id of a callback or the callback object itself.</p>",
+            "itemtype": "method",
+            "name": "_defRemoveFn",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "the custom event",
+                    "type": "Event"
+                }
+            ],
+            "access": "protected",
+            "tagname": "",
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        },
+        {
+            "file": "js/async-queue.js",
+            "line": 712,
+            "description": "Returns the number of callbacks in the queue.",
+            "itemtype": "method",
+            "name": "size",
+            "return": {
+                "description": "",
+                "type": "Number"
+            },
+            "class": "AsyncQueue",
+            "module": "async-queue"
+        }
+    ]
+}
